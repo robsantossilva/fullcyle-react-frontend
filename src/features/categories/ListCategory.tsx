@@ -15,6 +15,15 @@ import DeleteIcon from "@mui/icons-material/Delete";
 export function CategoryList() {
   const categories = useAppSelector(selectCategories);
 
+  const componentProps = {
+    toolbar: {
+      showQuickFilter: true,
+      quickFilterProps: {
+        debounceMs: 500,
+      },
+    },
+  };
+
   // use categories to create rows
   const rows: GridRowsProp = categories.map((category) => ({
     id: category.id,
@@ -29,6 +38,7 @@ export function CategoryList() {
       field: "name",
       headerName: "Name",
       flex: 1,
+      renderCell: renderNameCell,
     },
     {
       field: "isActive",
@@ -70,6 +80,17 @@ export function CategoryList() {
     );
   }
 
+  function renderNameCell(params: GridRenderCellParams) {
+    return (
+      <Link
+        style={{ textDecoration: "none" }}
+        to={`/categories/edit/${params.id}`}
+      >
+        <Typography color="primary">{params.value}</Typography>
+      </Link>
+    );
+  }
+
   function handleDelete(id: string) {
     return () => {
       console.log(id);
@@ -90,29 +111,20 @@ export function CategoryList() {
         </Button>
       </Box>
 
-      <div style={{ height: 300, width: "100%" }}>
+      <Box style={{ height: 600, display: "flex" }}>
         <DataGrid
-          rowsPerPageOptions={[1, 10, 20, 30, 100]}
-          disableColumnSelector={true}
-          disableColumnFilter={true}
-          disableDensitySelector={true}
-          disableSelectionOnClick={true}
-          density={"compact"}
           rows={rows}
           columns={columns}
-          components={{
-            Toolbar: GridToolbar,
-          }}
-          componentsProps={{
-            toolbar: {
-              showQuickFilter: true,
-              quickFilterProps: {
-                debounceMs: 500,
-              },
-            },
-          }}
+          density={"compact"}
+          disableColumnFilter={true}
+          disableColumnSelector={true}
+          disableDensitySelector={true}
+          disableSelectionOnClick={true}
+          componentsProps={componentProps}
+          components={{ Toolbar: GridToolbar }}
+          rowsPerPageOptions={[1, 10, 20, 30, 100]}
         />
-      </div>
+      </Box>
     </Box>
   );
 }
