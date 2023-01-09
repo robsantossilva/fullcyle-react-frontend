@@ -104,7 +104,7 @@ export function CategoryList() {
           variant="contained"
           color="secondary"
           component={Link}
-          to="/category/new"
+          to="/categories/create"
           style={{ marginBottom: "1rem" }}
         >
           New Category
