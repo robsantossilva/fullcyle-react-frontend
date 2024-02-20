@@ -21,6 +21,7 @@ export function CategoryCreate() {
 
   function handleToggle(e: React.ChangeEvent<HTMLInputElement>): void {
     console.log(e);
+    setCategory({...category, is_active: !category.is_active});
   }
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>): void {
