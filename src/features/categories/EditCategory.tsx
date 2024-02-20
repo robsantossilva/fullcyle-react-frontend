@@ -1,8 +1,8 @@
 import { Box, Paper, Typography } from "@mui/material";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useAppSelector } from "../../app/hooks";
-import { Category, selectCategoryById } from "./categorySlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { Category, selectCategoryById, updateCategory } from "./categorySlice";
 import CategoryForm from "./components/CategoryForm";
 
 export function CategoryEdit() {
@@ -10,9 +10,13 @@ export function CategoryEdit() {
   const [isDisabled, setIsDisabled] = useState(false);
   const category = useAppSelector((state) => selectCategoryById(state, id));
   const [categoryState, setCategoryState] = useState<Category>(category);
+  const dispatch = useAppDispatch();
+
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    console.log(e);
+    e.preventDefault();
+    dispatch(updateCategory(categoryState));
+    console.log(category)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +46,7 @@ export function CategoryEdit() {
           handleToggle={handleToggle}
           isDisabled={isDisabled}
           isLoading={false}
-          onSubmit={handleSubmit}
+          handleSubmit={handleSubmit}
         />
       </Paper>
     </Box>
