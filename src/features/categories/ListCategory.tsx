@@ -11,10 +11,12 @@ import {
   GridToolbar,
 } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useSnackbar } from "notistack";
 
 export function CategoryList() {
   const categories = useAppSelector(selectCategories);
   const dispatch = useAppDispatch();
+  const { enqueueSnackbar } = useSnackbar();
 
   const componentProps = {
     toolbar: {
@@ -96,6 +98,7 @@ export function CategoryList() {
 
   function handleDeleteCategory(id: string) {
     dispatch(deleteCategory(id));
+    enqueueSnackbar("Category deleted successfully", {variant:"success"})
   }
 
   return (
