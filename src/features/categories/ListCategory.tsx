@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Button, IconButton, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { deleteCategory, selectCategories } from "./categorySlice";
+import { deleteCategory, selectCategories, useDeleteCategoryMutation, useGetCategoriesQuery } from "./categorySlice";
 import { Link } from "react-router-dom";
 import {
   DataGrid,
@@ -14,6 +14,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useSnackbar } from "notistack";
 
 export function CategoryList() {
+  const { data, isFetching, error } = useGetCategoriesQuery();
+  const [deleteCategory, deleteCategoryStatus] = useDeleteCategoryMutation();
+
   const categories = useAppSelector(selectCategories);
   const dispatch = useAppDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -28,13 +31,13 @@ export function CategoryList() {
   };
 
   // use categories to create rows
-  const rows: GridRowsProp = categories.map((category) => ({
+  const rows: GridRowsProp = data ? data?.data.map((category) => ({
     id: category.id,
     name: category.name,
     description: category.description,
-    isActive: category.is_active,
-    createdAt: new Date(category.created_at).toLocaleDateString("pt-RB"),
-  }));
+    isActive: category.isActive,
+    createdAt: new Date(category.createdAt).toLocaleDateString("pt-RB"),
+  })) : [];
 
   const columns: GridColDef[] = [
     {
@@ -96,10 +99,19 @@ export function CategoryList() {
     );
   }
 
-  function handleDeleteCategory(id: string) {
-    dispatch(deleteCategory(id));
-    enqueueSnackbar("Category deleted successfully", {variant:"success"})
+  async function handleDeleteCategory(id: string) {
+    //dispatch(deleteCategory(id));
+    await deleteCategory({id});
   }
+
+  useEffect(() => {
+    if(deleteCategoryStatus.isSuccess){
+      enqueueSnackbar("Category deleted successfully", {variant:"success"});
+    }
+    if(deleteCategoryStatus.isError){
+      enqueueSnackbar("Category not deleted", {variant:"error"});
+    }
+  }, [deleteCategoryStatus, enqueueSnackbar]);
 
   return (
     <Box maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
