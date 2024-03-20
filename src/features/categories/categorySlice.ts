@@ -111,6 +111,7 @@ export const selectCategoryById = (state: RootState, id: string): Category => {
 };
 
 export default categoriesSlice.reducer;
+
 export const { createCategory, updateCategory, deleteCategory } = 
   categoriesSlice.actions;
 
