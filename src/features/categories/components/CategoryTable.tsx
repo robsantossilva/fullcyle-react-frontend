@@ -15,20 +15,18 @@ type Props = {
   data: Results | undefined;
   perPage: number;
   isFetching: boolean;
-  rowsPerPage: number;
   rowsPerPageOptions: number[];
 
   handleOnPgeChange: (page: number) => void;
   handleFilterChange: (filterModel: GridFilterModel) => void;
   handleOnPageSizeChange: (perPage: number) => void;
-  handleDelete: (id: number) => void;
+  handleDelete: (id: string) => void;
 };
 
 export function CategoryTable({
   data,
   perPage,
   isFetching,
-  rowsPerPage,
   rowsPerPageOptions,
   handleDelete,
   handleOnPgeChange,
@@ -134,9 +132,9 @@ export function CategoryTable({
         disableColumnSelector={true}
         disableDensitySelector={true}
         rowsPerPageOptions={rowsPerPageOptions}
+        componentsProps={componentProps}
         onPageChange={handleOnPgeChange}
         components={{ Toolbar: GridToolbar }}
-        componentsProps={componentProps}
         onFilterModelChange={handleFilterChange}
         onPageSizeChange={handleOnPageSizeChange}
         //disableSelectionOnClick={true}
