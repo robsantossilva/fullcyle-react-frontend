@@ -10,23 +10,30 @@ import { CategoryTable } from "./components/CategoryTable";
 import { GridFilterModel } from "@mui/x-data-grid";
 
 export function CategoryList() {
-  const [perPage] = useState(10);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
   const [search, setSearch] = useState("");
   const [rowsPerPageOptions] = useState([10, 25, 50, 100]);
-  const { data, isFetching, error } = useGetCategoriesQuery();
+
+  const options = { perPage, search, page };
+
+  const { data, isFetching, error } = useGetCategoriesQuery(options);
   const [deleteCategory, deleteCategoryStatus] = useDeleteCategoryMutation();
   const { enqueueSnackbar } = useSnackbar();
 
   function handleOnPgeChange(page: number) {
-
+    setPage(page + 1);
   }
 
   function handleOnPageSizeChange(perPage: number) {
-
+    setPerPage(perPage);
   }
 
   function handleFilterChange(filterModel: GridFilterModel) {
-    
+    if (filterModel.quickFilterValues?.length) {
+      setSearch(filterModel.quickFilterValues.join(""));
+    }
+    return setSearch("")
   }
 
   async function handleDeleteCategory(id: string) {
